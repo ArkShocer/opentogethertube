@@ -1,5 +1,5 @@
 <template>
-	<v-app id="app">
+	<v-app id="app" :style="{ background: $vuetify.theme.themes[theme].background }">
 		<v-app-bar
 			app
 			:absolute="!$store.state.fullscreen"
@@ -110,6 +110,17 @@
 						@change="setLocale"
 						:value="$i18n.locale"
 					/>
+					<v-btn
+					color="accent"
+					elevation="2"
+					fab
+					icon
+					rounded
+					small
+					@click="toggle_dark_mode"
+					>
+					<v-icon>mdi-theme-light-dark</v-icon>
+					</v-btn>
 				</v-list-item-group>
 			</v-list>
 			<template v-slot:append>
@@ -194,6 +205,10 @@ export default Vue.extend({
 		};
 	},
 	methods: {
+		toggle_dark_mode: function () {
+			this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
+			localStorage.setItem("dark_theme", this.$vuetify.theme.dark.toString());
+		},
 		logout() {
 			API.post("/user/logout").then(res => {
 				if (res.data.success) {
@@ -206,7 +221,27 @@ export default Vue.extend({
 			this.$store.commit("settings/UPDATE", { locale });
 		},
 	},
+	computed: {
+		theme() {
+			return this.$vuetify.theme.dark ? "dark" : "light";
+		}
+	},
 	async created() {
+		const theme = localStorage.getItem("dark_theme");
+		if (theme) {
+			if (theme === "true") {
+				this.$vuetify.theme.dark = true;
+			} else {
+				this.$vuetify.theme.dark = false;
+			}
+		} else if (
+		window.matchMedia &&
+		window.matchMedia("(prefers-color-scheme: dark)").matches
+		) {
+		this.$vuetify.theme.dark = true;
+		localStorage.setItem("dark_theme", this.$vuetify.theme.dark.toString());
+		}
+
 		document.addEventListener("fullscreenchange", () => {
 			if (document.fullscreenElement) {
 				this.$store.state.fullscreen = true;

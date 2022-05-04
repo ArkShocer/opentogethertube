@@ -16,6 +16,11 @@ const plugin = new Vuetify({
 				primary: "#ffb300", // orange
 				secondary: "#42A5F5", // blue
 			},
+			light: {
+				// Test colours
+				primary: "#00eeff", // Turquoise
+				secondary: "#ff00f7", // pink
+			},
 		},
 	},
 });
