@@ -119,7 +119,8 @@
 					small
 					@click="toggle_dark_mode"
 					>
-					<v-icon>mdi-theme-light-dark</v-icon>
+					<v-icon v-if="theme = true">fa-solid fa-moon</v-icon>
+					<v-icon v-if="theme != true">fa-solid fa-sun</v-icon>
 					</v-btn>
 				</v-list-item-group>
 			</v-list>
